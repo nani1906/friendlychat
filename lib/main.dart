@@ -2,56 +2,56 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 void main() {
-  runApp(new FriendlychatApp());
+  runApp(new FriendlyChatApp());
 }
 
-const String _name = "My Bestie";
+const String _name = "Bandari";
 
-class FriendlychatApp extends StatelessWidget {
+class FriendlyChatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: "Friendlychat",
-      theme: defaultTargetPlatform == TargetPlatform.iOS         //new
-          ? kIOSTheme                                              //new
-          : kDefaultTheme,                                         //new
+      theme: defaultTargetPlatform == TargetPlatform.iOS
+          ? kIOSTheme
+          : kDefaultTheme,
       home: new ChatScreen(),
     );
   }
 }
 
-class ChatScreen extends StatefulWidget {                     //modified
-  @override                                                        //new
-  State createState() => new ChatScreenState();                    //new
+class ChatScreen extends StatefulWidget {
+  @override
+  State createState() => new ChatScreenState();
 }
 
 // Add the ChatScreenState class definition in main.dart.
 
-class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {                  //new
+class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = new TextEditingController();
-  bool _isComposing = false;                                      //new
+  bool _isComposing = false;
 
 
 
   @override
-  void dispose() {                                                   //new
+  void dispose() {
     for (ChatMessage message in _messages) {
-      message.animationController.dispose(); //new
+      message.animationController.dispose();
     }
-    super.dispose();                                                 //new
+    super.dispose();
   }
 
 
-  @override                                                        //new
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
           title: new Text("Friendlychat"),
           elevation:
           Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0),
-      body: new Container(                                             //modified
-          child: new Column(                                           //modified
+      body: new Container(
+          child: new Column(
             children: <Widget>[
               new Flexible(
                 child: new ListView.builder(
@@ -69,12 +69,12 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin { 
               ),
             ],
           ),
-          decoration: Theme.of(context).platform == TargetPlatform.iOS //new
-              ? new BoxDecoration(                                     //new
-            border: new Border(                                  //new
-              top: new BorderSide(color: Colors.grey[200]),      //new
-            ),                                                   //new
-          )                                                      //new
+          decoration: Theme.of(context).platform == TargetPlatform.iOS
+              ? new BoxDecoration(
+            border: new Border(
+              top: new BorderSide(color: Colors.grey[200]),
+            ),
+          )
               : null), //modified
     );
   }
@@ -84,34 +84,34 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin { 
       data: new IconThemeData(color: Theme.of(context).accentColor),
       child: new Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: new Row(                                            //new
-        children: <Widget>[                                      //new
-          new Flexible(                                          //new
+      child: new Row(
+        children: <Widget>[
+          new Flexible(
             child: new TextField(
               controller: _textController,
-              onChanged: (String text) {          //new
-                setState(() {                     //new
-                  _isComposing = text.length > 0; //new
-                });                               //new
+              onChanged: (String text) {
+                setState(() {
+                  _isComposing = text.length > 0;
+                });
               },
               onSubmitted: _handleSubmitted,
               decoration: new InputDecoration.collapsed(
                   hintText: "Send a message"),
             ),
-          ),                                                      //new
+          ),
           new Container(
             margin: new EdgeInsets.symmetric(horizontal: 4.0),
-            child: Theme.of(context).platform == TargetPlatform.iOS ?  //modified
-            new CupertinoButton(                                       //new
-              child: new Text("Send"),                                 //new
-              onPressed: _isComposing                                  //new
-                  ? () =>  _handleSubmitted(_textController.text)      //new
-                  : null,) :                                           //new
-            new IconButton(                                            //modified
+            child: Theme.of(context).platform == TargetPlatform.iOS ?
+            new CupertinoButton(
+              child: new Text("Send"),
+              onPressed: _isComposing
+                  ? () =>  _handleSubmitted(_textController.text)
+                  : null,) :
+            new IconButton(
               icon: new Icon(Icons.send), onPressed: _isComposing ? () => _handleSubmitted(_textController.text) : null),
           )
-        ],                                                        //new
-      ),                                                          //new
+        ],
+      ),
     ),
     );
 
@@ -123,9 +123,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin { 
   void _handleSubmitted(String text) {
     _textController.clear();
 
-    setState(() {                                                    //new
-      _isComposing = false;                                          //new
-    });                                                              //new
+    setState(() {
+      _isComposing = false;
+    });
 
     ChatMessage message = new ChatMessage(
       text: text,
@@ -138,21 +138,56 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin { 
       _messages.insert(0, message);
     });
     message.animationController.forward();
+
+//
+//    Navigator.push(
+//      context,
+//      new MaterialPageRoute(builder: (context) => new SecondScreen()),
+//    );
   }
 }
 
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Second Screen"),
+
+      ),
+      body: new Center(
+        child: new RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: new Text('Go back!'),
+        ),
+
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
 class ChatMessage extends StatelessWidget {
-  ChatMessage({this.text, this.animationController});         //modified
+  ChatMessage({this.text, this.animationController});
   final String text;
   final AnimationController animationController;
 
   @override
   Widget build(BuildContext context) {
-    return new SizeTransition(                                    //new
-        sizeFactor: new CurvedAnimation(                              //new
-            parent: animationController, curve: Curves.easeOut),      //new
-        axisAlignment: 0.0,                                           //new
-        child: new Container(                                    //modified
+    return new SizeTransition(
+        sizeFactor: new CurvedAnimation(
+            parent: animationController, curve: Curves.easeOut),
+        axisAlignment: 0.0,
+        child: new Container(
           margin: const EdgeInsets.symmetric(vertical: 10.0),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,8 +196,8 @@ class ChatMessage extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 16.0),
                 child: new CircleAvatar(child: new Text(_name[0])),
               ),
-              new Expanded(                                               //new
-                child: new Column(                                   //modified
+              new Expanded(
+                child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new Text(_name, style: Theme.of(context).textTheme.subhead),
@@ -172,38 +207,10 @@ class ChatMessage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),                                                          //new
+              ),
             ],
           ),
-        )                                                           //new
-    );
-  }                   //new
-}
-                                                         //new
-
-
-
-
-
-
-
-
-
-class SecondScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Second Screen"),
-      ),
-      body: new Center(
-        child: new RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: new Text('Go back!'),
-        ),
-      ),
+        )
     );
   }
 }
